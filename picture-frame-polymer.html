@@ -1,0 +1,95 @@
+<link rel="import" href="https://polygit.org/components/polymer/polymer-element.html">
+
+<dom-module id="picture-frame-polymer">
+  <template>
+    <style>
+      :host {
+        display: inline-block;
+        text-align: center;
+        margin: 0 0 250px;
+        width: 510px;
+      }
+
+      section {
+        perspective: 800px;
+      }
+
+      #card {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        transform-style: preserve-3d;
+        transition: transform 1s;
+      }
+
+      #card figure {
+        margin: 0;
+        display: block;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+      }
+
+      #card .back {
+        transform: rotateY(180deg);
+      }
+
+      #card.flipped {
+        transform: rotateY(180deg);
+      }
+
+      ::slotted(img) {
+        height: 200px;
+        background-color: #ccc;
+        padding: 10px;
+        border-radius: 5px;
+      }
+    </style>
+    <section>
+      <h3>{{ message }}</h3>
+      <div id="card" on-click="handleClick" class$="{{cardClass}}">
+        <figure class="front">
+          <slot name="front"></slot>
+        </figure>
+        <figure class="back">
+          <slot name="back"></slot>
+        </figure>
+      </div>
+    </section>
+  </template>
+
+  <script>
+    class PictureFramePolymer extends Polymer.Element {
+      handleClick() {
+        this.flipped = !this.flipped;
+      }
+
+      _flipCard() {
+        this.cardClass = (this.flipped) ? 'flipped' : '';
+      }
+
+      static get is() { return 'picture-frame-polymer'; }
+      static get properties() {
+        return {
+          cardClass: {
+            type: String,
+            value: ''
+          },
+          flipped: {
+            type: Boolean,
+            value: false,
+            observer: '_flipCard'
+          }
+        }
+      }
+
+      constructor() {
+        super();
+        this.message = 'Hello world! This element was built using Polymer.';
+      }
+    }
+
+    customElements.define(PictureFramePolymer.is, PictureFramePolymer);
+  </script>
+</dom-module>

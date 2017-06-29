@@ -1,0 +1,53 @@
+<!-- test component -->
+<template id="x-test-component-template">
+  <div>the color is <span id="color"></span></div>
+</template>
+
+<script>
+  class TestComponent extends HTMLElement {
+    static get observedAttributes() {
+      return ['color'];
+    }
+
+    get color() {
+      return this.getAttribute('color');
+    }
+
+    set color(val) {
+      if (val) {
+        this.setAttribute('color', val);
+      } else {
+        this.removeAttribute('color');
+      }
+    }
+
+    changeColor () {
+      let el = this.shadowRoot.querySelector('#color');
+      el.textContent = this.color;
+    }
+
+    attributeChangedCallback(name, oldVal, newVal) {
+      if (name == 'color') {
+        this.changeColor();
+      }
+    }
+
+    connectedCallback() {
+      this.color = 'blue';
+    }
+
+    constructor() {
+      super();
+
+      this.currentDocument = document.currentScript.ownerDocument;
+
+      let shadowRoot = this.attachShadow({mode: 'open'});
+      const t = this.currentDocument.querySelector('#x-test-component-template');
+      const instance = t.content.cloneNode(true);
+
+      shadowRoot.appendChild(instance);
+    }
+  }
+
+  customElements.define('test-component', TestComponent);
+</script>

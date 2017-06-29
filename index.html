@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>web components test</title>
+  <link rel="import" href="picture-frame-native.html" />
+  <link rel="import" href="picture-frame-polymer.html" />
+</head>
+<body>
+  <picture-frame-native message="Hello world! This element was built using the native platform.">
+    <img src="images/cat-treadmill.gif" slot="front" />
+    <img src="images/dog-treadmill.gif" slot="back" />
+  </picture-frame-native>
+
+  <picture-frame-polymer>
+    <img src="images/cat-treadmill.gif" slot="front" />
+    <img src="images/dog-treadmill.gif" slot="back" />
+  </picture-frame-polymer>
+</body>
+</html>

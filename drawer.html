@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>web component test</title>
+  <style>
+    test-component:not(:defined) {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <template id="test-component-template">
+    <style>
+      span {
+        font-size: 5em;
+      }
+    </style>
+    <b>I'm in Shadow DOM from markup stamped from a template!</b>
+    <span>larger?</span>
+    <slot></slot>
+  </template>
+  <script>
+  class TestComponent extends HTMLElement {
+    connectedCallback() {
+
+    }
+
+    constructor() {
+      super();
+
+      let shadowRoot = this.attachShadow({mode: 'open'});
+      const t = document.querySelector('#test-component-template');
+      const instance = t.content.cloneNode(true);
+      shadowRoot.appendChild(instance);
+    }
+  }
+
+  customElements.define('test-component', TestComponent);
+
+  </script>
+  <test-component><span>hello world!</span></test-component>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!-- picture-frame-native component -->
+<template id="picture-frame-native-template">
+  <style>
+    :host {
+      display: inline-block;
+      text-align: center;
+      margin: 0 0 250px;
+      width: 510px;
+    }
+
+    section {
+      perspective: 800px;
+    }
+
+    #card {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      transform-style: preserve-3d;
+      transition: transform 1s;
+    }
+
+    #card figure {
+      margin: 0;
+      display: block;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+    }
+
+    #card .back {
+      transform: rotateY(180deg);
+    }
+
+    #card.flipped {
+      transform: rotateY(180deg);
+    }
+
+    ::slotted(img) {
+      height: 200px;
+      background-color: #ccc;
+      padding: 10px;
+      border-radius: 5px;
+    }
+  </style>
+  <section>
+    <h3></h3>
+    <div id="card">
+      <figure class="front">
+        <slot name="front"></slot>
+      </figure>
+      <figure class="back">
+        <slot name="back"></slot>
+      </figure>
+    </div>
+  </section>
+</template>
+
+<script>
+  class PictureFrameNative extends HTMLElement {
+    connectedCallback() {
+      let el = this.shadowRoot.querySelector('h3');
+      el.textContent = this.getAttribute('message');
+    }
+
+    static get observedAttributes() {
+      return ['flipped'];
+    }
+
+    attributeChangedCallback(name, oldValue, newValue) {
+      if (name == 'flipped') {
+        this.shadowRoot.querySelector('#card').classList.toggle('flipped');
+      }
+    }
+
+    constructor() {
+      super();
+
+      this.addEventListener('click', e => {
+        this.setAttribute('flipped', true);
+      });
+
+      this.currentDocument = document.currentScript.ownerDocument;
+
+      let shadowRoot = this.attachShadow({mode: 'open'});
+      const t = this.currentDocument.querySelector('#picture-frame-native-template');
+      const instance = t.content.cloneNode(true);
+
+      shadowRoot.appendChild(instance);
+    }
+  }
+
+  customElements.define('picture-frame-native', PictureFrameNative);
+</script>
